@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sound Space</title>
+	<script type="text/javascript" src="paper-full.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.15/howler.js"></script>	
+    <link rel="stylesheet" type="text/css" href="SoundsProj.css">
+	<script type="text/paperscript" canvas="myCanvas">
+        var keyData =
+        {
+            a:{
+                color: "purple",
+                sound: new Howl({
+            src: ["sounds/bubbles.mp3"]
+        })
+            },
+
+            b:{
+                color: "red",
+                sound: new Howl({
+            src: ["sounds/moon.mp3"]
+        })
+            },
+
+            d:{
+                color: "yellow",
+                sound: new Howl({
+            src: ["sounds/clay.mp3"]
+                })
+            }
+        }
+
+		var circles =[];
+
+        var path = new Path.Circle({
+	       radius: 70,
+	       fillColor: 'red'    
+            });
+
+    function onKeyDown(event){
+        if(keyData[event.key]){
+            var maxsize = new Point(view.size.width, view.size.height);
+            var randVal = Point.random();
+            var myPoint = maxsize * randVal;
+            var myCircle = new Path.Circle(myPoint,100);
+            myCircle.fillColor = keyData[event.key].color;
+            keyData[event.key].sound.play();
+            circles.push(myCircle);
+        }
+    }
+
+    function onFrame(event) {
+	// Each frame, change the fill color of the path slightly by
+	// adding 1 to its hue:
+    for (var i = 0; i < circles.length; i++) {
+
+        circles[i].scale(.9);
+        circles[i].fillColor.hue += 1;
+        if(circles[i].area< 1)
+        {
+            circles[i].remove();
+            circles.splice(i,1);
+            console.log(circles);
+        }
+
+        // if(circles[i].size == 0)
+        // {
+        //     circles[i].remove();
+        // }
+    }
+
+	   path.fillColor.hue += 1;
+    }
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
